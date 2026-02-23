@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+
+    <div class="container">
+        <header>
+            <h1>Neural Vision</h1>
+            <p class="subtitle">Real-time facial tracking and analysis framework</p>
+        </header>
+
+        <div class="scanner-container">
+            <div style="position: relative; border-radius: 12px; overflow: hidden;">
+                <!-- This img tag is where the magic happens. The src attribute points to our Flask /video_feed route -->
+                <img src="{{ url_for('video_feed') }}" alt="Video Stream" class="video-feed" id="stream">
+                <div class="scanline"></div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-item">Engine: <span>OpenCV DNN</span></div>
+                <div class="status-item">Status: <span style="color: #ff3366;">Active</span></div>
+                <div class="status-item">Latency: <span>
+                        < 30ms</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="toggleBtn">
+                <span class="dot" id="statusDot"></span>
+                <span id="btnText">System Stream Online</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Very basic interaction script for visual flair -->
+    <script>
+        const toggleBtn = document.getElementById('toggleBtn');
+        const stream = document.getElementById('stream');
+        const statusDot = document.getElementById('statusDot');
+        const btnText = document.getElementById('btnText');
+        let isStreaming = true;
+
+        // In a real advanced app, this might stop the camera, but here it just hides the feed visually
+        toggleBtn.addEventListener('click', () => {
+            if (isStreaming) {
+                stream.style.opacity = '0.3';
+                stream.style.filter = 'grayscale(100%)';
+                btnText.innerText = 'System Stream Offline';
+                statusDot.style.backgroundColor = '#888';
+                statusDot.style.boxShadow = 'none';
+                statusDot.style.animation = 'none';
+                toggleBtn.classList.remove('btn-primary');
+            } else {
+                stream.style.opacity = '1';
+                stream.style.filter = 'none';
+                btnText.innerText = 'System Stream Online';
+                statusDot.style.backgroundColor = '#ff3366';
+                statusDot.style.boxShadow = '0 0 10px #ff3366';
+                statusDot.style.animation = 'pulse 1.5s infinite';
+                toggleBtn.classList.add('btn-primary');
+            }
+            isStreaming = !isStreaming;
+        });
+    </script>
+</body>
+
+</html>
